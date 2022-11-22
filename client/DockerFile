@@ -1,0 +1,13 @@
+FROM node:16.13.0
+
+WORKDIR /src/client
+
+COPY *.json ./
+
+RUN npm  install -g npm@9.1.2
+
+RUN npm install @quasar/cli
+
+COPY . .
+
+EXPOSE 3000

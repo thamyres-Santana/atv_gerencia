@@ -1,0 +1,37 @@
+version: '3.7'
+services:
+  postgres:
+    image: postgres:12.2
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: myuser
+      POSTGRES_DB: myproject
+    ports:
+      - 5432:5432
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    
+  api:
+    build: ./api/
+    container_name: Api
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: myuser
+      POSTGRES_DB: myproject
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+    ports:
+      - 8000:8000
+    command: sh -c "python manage.py migrate && python manage.py test && python manage.py runserver"
+    depends_on:
+      - postgres
+    
+  client:
+    build: ./client/
+    container_name: Client
+    command: sh -c "npm install -g @quasar/cli  && quasar dev"
+    ports:
+      - 80:8080
+    depends_on:
+      - api

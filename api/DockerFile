@@ -1,0 +1,16 @@
+FROM python:3
+WORKDIR /src/api
+
+COPY . .
+
+RUN apt-get update
+RUN apt-get install python3-pip python3-dev libpq-dev postgresql postgresql-contrib -y
+
+RUN pip3 install virtualenv
+
+RUN virtualenv env
+RUN . env/bin/activate
+
+RUN pip3 install django djangorestframework psycopg2 django-cors-headers
+
+EXPOSE 8000
